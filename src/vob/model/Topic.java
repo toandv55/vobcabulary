@@ -11,7 +11,7 @@ public class Topic {
 	private String id;
 	private String name;
 	
-	@HasMany(children = "words")
+	@HasMany(children = "Words")
 	private List<Word> wordList;
 	
 	public String getId() {

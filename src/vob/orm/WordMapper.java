@@ -1,5 +1,9 @@
 package vob.orm;
 
+import java.util.List;
+
+import vob.model.Topic;
+import vob.model.Word;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -25,4 +29,23 @@ public class WordMapper extends SQLiteOpenHelper {
 		
 	}
 
+	public Word add(Word word, Topic topic) {
+		return word;
+	}
+	
+	public Word find(String word) {
+		return null;
+	}
+	
+	public List<Word> all() {
+		return null;
+	}
+	
+	public Word destroy(String word) {
+		return null;
+	}
+	
+	public Word update(String word, Word newWord) {
+		return null;
+	}
 }
