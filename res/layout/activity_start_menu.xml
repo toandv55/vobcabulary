@@ -8,9 +8,47 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".StartMenuActivity" >
 
-    <TextView
+    <Button
+        android:id="@+id/setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_below="@+id/review"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="Thiết lập" 
+        android:onClick="setting"/>
+
+    <Button
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/review"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/review"
+        android:layout_marginTop="54dp"
+        android:text="Chơi" 
+        android:onClick="play"/>
+
+    <Button
+        android:id="@+id/exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/setting"
+        android:layout_alignRight="@+id/setting"
+        android:layout_below="@+id/setting"
+        android:layout_marginTop="43dp"
+        android:text="Thoát" 
+        android:onClick="exit"/>
+
+    <Button
+        android:id="@+id/review"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/setting"
+        android:layout_alignRight="@+id/setting"
+        android:layout_below="@+id/play"
+        android:layout_marginTop="56dp"
+        android:text="Ôn tập" 
+        android:onClick="review"/>
 
 </RelativeLayout>

@@ -8,16 +8,25 @@ import vob.annotation.MappedWithTable;
 @MappedWithTable
 public class Topic {
 	@Id
-	private String id;
+	private int id;
 	private String name;
+	private String imageURL;
 	
 	@HasMany(children = "Words")
 	private List<Word> wordList;
 	
-	public String getId() {
+	
+	public Topic(int id, String name, String imageURL, List<Word> wordList) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.imageURL = imageURL;
+		this.wordList = wordList;
+	}
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -31,5 +40,11 @@ public class Topic {
 	}
 	public void setWordList(List<Word> wordList) {
 		this.wordList = wordList;
+	}
+	public String getImageURL() {
+		return imageURL;
+	}
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
 	}
 }

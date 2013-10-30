@@ -1,8 +1,10 @@
 package vob.orm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import vob.model.Topic;
+import vob.model.Word;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -35,7 +37,12 @@ public class TopicMapper extends SQLiteOpenHelper {
 	}
 	
 	public List<Topic> all() {
-		return null;
+		List<Topic> list = new ArrayList<Topic>();
+		list.add(new Topic(1, "A", "a", null));
+		list.add(new Topic(2, "B", "b", null));
+		list.add(new Topic(3, "C", "c", null));
+		list.add(new Topic(4, "D", "d", null));
+		return list;
 	}
 	
 	public Topic destroy(String id) {

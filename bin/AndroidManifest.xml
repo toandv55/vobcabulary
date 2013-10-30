@@ -39,7 +39,7 @@
             android:label="@string/title_activity_review" >
         </activity>
         <activity
-            android:name="vob.activity.ResetActivity"
+            android:name="vob.activity.SettingActivity"
             android:label="@string/title_activity_reset" >
         </activity>
     </application>
