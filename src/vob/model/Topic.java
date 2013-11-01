@@ -15,7 +15,9 @@ public class Topic {
 	@HasMany(children = "Words")
 	private List<Word> wordList;
 	
-	
+	public Topic() {
+		
+	}
 	public Topic(int id, String name, String imageURL, List<Word> wordList) {
 		super();
 		this.id = id;

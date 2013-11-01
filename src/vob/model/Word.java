@@ -10,6 +10,9 @@ public class Word {
 	
 	private String imageURL;
 	private String audioURL;
+	private String phonetic;
+	private int topicId;
+	
 	
 	@BelongsTo(parent = "Topics")
 	private Topic topic;
@@ -44,6 +47,17 @@ public class Word {
 	public void setTopic(Topic topic) {
 		this.topic = topic;
 	}
-	
+	public int getTopicId() {
+		return topicId;
+	}
+	public void setTopicId(int topicId) {
+		this.topicId = topicId;
+	}
+	public String getPhonetic() {
+		return phonetic;
+	}
+	public void setPhonetic(String phonetic) {
+		this.phonetic = phonetic;
+	}
 	
 }

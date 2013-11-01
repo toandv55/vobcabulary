@@ -5,49 +5,140 @@ import java.util.List;
 
 import vob.model.Topic;
 import vob.model.Word;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class TopicMapper extends SQLiteOpenHelper {
 	private static String DB_NAME = "vobforkid";
+	private static final int DATABASE_VERSION = 1;
+	private static final String TABLE_TOPICS = "topics";
+	private static final String TABLE_WORDS = "words";
+	private static final String COLUMN_TOPIC_ID = "id";
+	private static final String COLUMN_NAME = "name";
+	private static final String COLUMN_IMAGE_URL = "imageURL";
+	
+	private static final String COLUMN_WORD = "word";
+	private static final String COLUMN_MEANING = "meaning";
+	private static final String COLUMN_AUDIO_URL = "audioURL";
+	private static final String COLUMN_PARENT = "topic_id";
+	
+
 	public TopicMapper(Context context) {
-		super(context, DB_NAME, null, 1);
+		super(context, DB_NAME, null, DATABASE_VERSION);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void onCreate(SQLiteDatabase arg0) {
-		// TODO Auto-generated method stub
-		
+	public void onCreate(SQLiteDatabase db) {
+		String CREATE_TOPICS_TABLE = "CREATE TABLE " + TABLE_TOPICS + "("
+				+ COLUMN_TOPIC_ID + " INTEGER PRIMARY KEY," + COLUMN_NAME
+				+ " TEXT," + COLUMN_IMAGE_URL + " TEXT," + ")";
+		db.execSQL(CREATE_TOPICS_TABLE);
+
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
-		// TODO Auto-generated method stub
-		
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		// Drop older table if existed
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_TOPICS);
+
+		// Recreate the table
+		onCreate(db);
+
 	}
-	
+
 	public Topic add(Topic topic) {
-		return topic;
-	} 
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_TOPIC_ID, topic.getId());
+		values.put(COLUMN_NAME, topic.getName());
+		values.put(COLUMN_IMAGE_URL, topic.getImageURL());
 	
+
+		// Inserting Row
+		db.insert(TABLE_TOPICS, null, values);
+		db.close(); // Closing database connection
+
+		return topic;
+	}
+	public Word addWord(Word word, Topic topic) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_WORD, word.getWord());
+		values.put(COLUMN_MEANING, word.getMeaning());
+		values.put(COLUMN_IMAGE_URL, word.getImageURL());
+		values.put(COLUMN_AUDIO_URL, word.getAudioURL());
+		values.put(COLUMN_PARENT, word.getTopic().getId());
+
+		// Inserting Row
+		db.insert(TABLE_WORDS, null, values);
+		db.close(); // Closing database connection
+
+		return word;
+	}
 	public Topic find(String id) {
 		return null;
 	}
-	
-	public List<Topic> all() {
-		List<Topic> list = new ArrayList<Topic>();
-		list.add(new Topic(1, "A", "a", null));
-		list.add(new Topic(2, "B", "b", null));
-		list.add(new Topic(3, "C", "c", null));
-		list.add(new Topic(4, "D", "d", null));
-		return list;
+
+	public List<Topic> getAllTopics() {
+		List<Topic> topicsList = new ArrayList<Topic>();
+		List<Word>	wordsList = new ArrayList<Word>();
+		Cursor cursor;
+		String getAllTopics = "SELECT  * FROM " + TABLE_TOPICS ;
+		String getAllWords = "SELECT  * FROM " + TABLE_WORDS ;
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		//fetch the result set in to Word List
+		cursor = db.rawQuery(getAllWords, null);
+		if (cursor.moveToFirst()) {
+			do {	
+				Word aword= new Word();
+				aword.setWord(cursor.getString(0));
+				aword.setMeaning(cursor.getString(1));
+				aword.setImageURL(cursor.getString(2));
+				aword.setAudioURL(cursor.getString(3));
+				aword.setTopicId(cursor.getInt(4));
+				
+				wordsList.add(aword);
+			} while (cursor.moveToNext());
+		}
+		
+		//fetch the result set into Topic List 
+		cursor = db.rawQuery(getAllTopics, null);
+		if (cursor.moveToFirst()) {
+			do{
+				Topic atopic = new Topic();
+				atopic.setId(Integer.parseInt(cursor.getString(0)));
+				atopic.setName(cursor.getString(1));
+				atopic.setImageURL(cursor.getString(2));
+				atopic.setWordList(null);
+				
+				
+				topicsList.add(atopic);
+			} while (cursor.moveToNext());
+		}
+		
+		//get the wordList of each topic 
+		for (Topic aTopic : topicsList){ 
+			for (Word aWord : wordsList){
+				if( aTopic.getId( )== aWord.getTopicId()){
+					aTopic.getWordList().add(aWord);
+				}
+			}
+		}
+		
+		return topicsList ;
 	}
-	
+
 	public Topic destroy(String id) {
 		return null;
-	} 
+	}
+
 	public Topic update(String id, Topic newTopic) {
 		return null;
 	}
