@@ -27,7 +27,7 @@ public class TopicMapper extends SQLiteOpenHelper {
 	private static final String COLUMN_PHONETIC = " phonetic ";
 	private static final String COLUMN_AUDIO_URL = "audioURL";
 	private static final String COLUMN_PARENT = "topic_id";
-	private static final String COLUMN_LEARNED = "isLearned";
+	private static final String COLUMN_LEARNED = "islearned";
 
 	public TopicMapper(Context context) {
 		super(context, DB_NAME, null, DATABASE_VERSION);
@@ -44,7 +44,7 @@ public class TopicMapper extends SQLiteOpenHelper {
 				+ COLUMN_WORD + " TEXT PRIMARY KEY," + COLUMN_PHONETIC
 				+ " TEXT," + COLUMN_MEANING + " TEXT," + COLUMN_IMAGE_URL
 				+ " TEXT," + COLUMN_AUDIO_URL + " TEXT," + COLUMN_PARENT
-				+ " INTEGER" + COLUMN_LEARNED + " INTEGER" + ")";
+				+ " INTEGER," + COLUMN_LEARNED + " INTEGER" + ")";
 		db.execSQL(CREATE_WORDS_TABLE);
 		db.execSQL(CREATE_TOPICS_TABLE);
 
@@ -149,12 +149,6 @@ public class TopicMapper extends SQLiteOpenHelper {
 
 		wordsList = getAllWord();
 
-		for (Word aWord : wordsList) {
-			String log = "Name " + aWord.getWord() + " Phonetic  "
-					+ aWord.getPhonetic() + "ID : " + aWord.getTopicId();
-			Log.d("Word info ", log);
-		}
-
 		for (Topic aTopic : topicsList) {
 			aTopic.setWordList(new ArrayList<Word>());
 		}
@@ -169,6 +163,24 @@ public class TopicMapper extends SQLiteOpenHelper {
 		}
 
 		return topicsList;
+	}
+
+	public Word updateLearned(Word aWord, int value) {
+		aWord.setIslearned(value);
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+
+		values.put(COLUMN_PHONETIC, aWord.getPhonetic());
+		values.put(COLUMN_MEANING, aWord.getMeaning());
+		values.put(COLUMN_IMAGE_URL, aWord.getImageURL());
+		values.put(COLUMN_AUDIO_URL, aWord.getAudioURL());
+		values.put(COLUMN_PARENT, aWord.getTopic().getId());
+		values.put(COLUMN_LEARNED, aWord.getIslearned());
+
+		db.update(TABLE_WORDS, values, COLUMN_WORD + " = ?",
+				new String[] { String.valueOf(aWord.getWord()) });
+
+		return aWord;
 	}
 
 	public Topic destroy(String id) {
