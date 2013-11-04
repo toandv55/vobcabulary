@@ -10,21 +10,23 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class TopicMapper extends SQLiteOpenHelper {
 	private static String DB_NAME = "vobforkid";
 	private static final int DATABASE_VERSION = 1;
 	private static final String TABLE_TOPICS = "topics";
 	private static final String TABLE_WORDS = "words";
+
 	private static final String COLUMN_TOPIC_ID = "id";
 	private static final String COLUMN_NAME = "name";
 	private static final String COLUMN_IMAGE_URL = "imageURL";
-	
+
 	private static final String COLUMN_WORD = "word";
 	private static final String COLUMN_MEANING = "meaning";
+	private static final String COLUMN_PHONETIC = " phonetic ";
 	private static final String COLUMN_AUDIO_URL = "audioURL";
 	private static final String COLUMN_PARENT = "topic_id";
-	
 
 	public TopicMapper(Context context) {
 		super(context, DB_NAME, null, DATABASE_VERSION);
@@ -35,7 +37,14 @@ public class TopicMapper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_TOPICS_TABLE = "CREATE TABLE " + TABLE_TOPICS + "("
 				+ COLUMN_TOPIC_ID + " INTEGER PRIMARY KEY," + COLUMN_NAME
-				+ " TEXT," + COLUMN_IMAGE_URL + " TEXT," + ")";
+				+ " TEXT," + COLUMN_IMAGE_URL + " TEXT" + ")";
+
+		String CREATE_WORDS_TABLE = "CREATE TABLE " + TABLE_WORDS + "("
+				+ COLUMN_WORD + " TEXT PRIMARY KEY," + COLUMN_PHONETIC
+				+ " TEXT," + COLUMN_MEANING + " TEXT," + COLUMN_IMAGE_URL
+				+ " TEXT," + COLUMN_AUDIO_URL + " TEXT," + COLUMN_PARENT
+				+ " INTEGER" + ")";
+		db.execSQL(CREATE_WORDS_TABLE);
 		db.execSQL(CREATE_TOPICS_TABLE);
 
 	}
@@ -44,7 +53,7 @@ public class TopicMapper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Drop older table if existed
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_TOPICS);
-
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_WORDS);
 		// Recreate the table
 		onCreate(db);
 
@@ -57,7 +66,6 @@ public class TopicMapper extends SQLiteOpenHelper {
 		values.put(COLUMN_TOPIC_ID, topic.getId());
 		values.put(COLUMN_NAME, topic.getName());
 		values.put(COLUMN_IMAGE_URL, topic.getImageURL());
-	
 
 		// Inserting Row
 		db.insert(TABLE_TOPICS, null, values);
@@ -65,74 +73,99 @@ public class TopicMapper extends SQLiteOpenHelper {
 
 		return topic;
 	}
-	public Word addWord(Word word, Topic topic) {
+
+	public Word addWord(Word word) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_WORD, word.getWord());
+		values.put(COLUMN_PHONETIC, word.getPhonetic());
 		values.put(COLUMN_MEANING, word.getMeaning());
 		values.put(COLUMN_IMAGE_URL, word.getImageURL());
 		values.put(COLUMN_AUDIO_URL, word.getAudioURL());
 		values.put(COLUMN_PARENT, word.getTopic().getId());
 
 		// Inserting Row
+
 		db.insert(TABLE_WORDS, null, values);
 		db.close(); // Closing database connection
 
 		return word;
 	}
+
 	public Topic find(String id) {
 		return null;
 	}
 
-	public List<Topic> getAllTopics() {
-		List<Topic> topicsList = new ArrayList<Topic>();
-		List<Word>	wordsList = new ArrayList<Word>();
+	public List<Word> getAllWord() {
+		List<Word> wordsList = new ArrayList<Word>();
 		Cursor cursor;
-		String getAllTopics = "SELECT  * FROM " + TABLE_TOPICS ;
-		String getAllWords = "SELECT  * FROM " + TABLE_WORDS ;
+		String getAllWords = "SELECT * FROM " + TABLE_WORDS;
 		SQLiteDatabase db = this.getWritableDatabase();
-		
-		//fetch the result set in to Word List
+
+		// fetch the result set in to Word List
 		cursor = db.rawQuery(getAllWords, null);
 		if (cursor.moveToFirst()) {
-			do {	
-				Word aword= new Word();
+			do {
+				Word aword = new Word();
 				aword.setWord(cursor.getString(0));
-				aword.setMeaning(cursor.getString(1));
-				aword.setImageURL(cursor.getString(2));
-				aword.setAudioURL(cursor.getString(3));
-				aword.setTopicId(cursor.getInt(4));
-				
+				aword.setPhonetic(cursor.getString(1));
+				aword.setMeaning(cursor.getString(2));
+				aword.setImageURL(cursor.getString(3));
+				aword.setAudioURL(cursor.getString(4));
+				aword.setTopicId(cursor.getInt(5));
+
 				wordsList.add(aword);
 			} while (cursor.moveToNext());
 		}
-		
-		//fetch the result set into Topic List 
+
+		return wordsList;
+	}
+
+	public List<Topic> getAllTopics() {
+		List<Topic> topicsList = new ArrayList<Topic>();
+		List<Word> wordsList = new ArrayList<Word>();
+		Cursor cursor;
+		String getAllTopics = "SELECT * FROM " + TABLE_TOPICS;
+		String getAllWords = "SELECT * FROM " + TABLE_WORDS;
+		SQLiteDatabase db = this.getWritableDatabase();
+
+	
+		// fetch the result set into Topic List
 		cursor = db.rawQuery(getAllTopics, null);
 		if (cursor.moveToFirst()) {
-			do{
+			do {
 				Topic atopic = new Topic();
-				atopic.setId(Integer.parseInt(cursor.getString(0)));
+				atopic.setId(cursor.getInt(0));
 				atopic.setName(cursor.getString(1));
 				atopic.setImageURL(cursor.getString(2));
 				atopic.setWordList(null);
-				
-				
+
 				topicsList.add(atopic);
 			} while (cursor.moveToNext());
 		}
+
+		wordsList = getAllWord();
 		
-		//get the wordList of each topic 
-		for (Topic aTopic : topicsList){ 
-			for (Word aWord : wordsList){
-				if( aTopic.getId( )== aWord.getTopicId()){
-					aTopic.getWordList().add(aWord);
+		for(Word aWord : wordsList){
+			String log = "Name " + aWord.getWord() + " Phonetic  " + aWord.getPhonetic()+ "ID : "+ aWord.getTopicId();
+			Log.d("Word info ", log );
+		}
+		
+		for (Topic aTopic : topicsList){
+			aTopic.setWordList(new ArrayList<Word>());
+		}
+		
+		// get the wordList of each topic sdfsdf
+		for (Topic aTopic : topicsList) {
+			for (Word aWord : wordsList) {
+				if (aTopic.getId() == aWord.getTopicId()) {
+					aTopic.getWordList().add( new Word());
 				}
 			}
 		}
-		
-		return topicsList ;
+
+		return topicsList;
 	}
 
 	public Topic destroy(String id) {
@@ -141,5 +174,9 @@ public class TopicMapper extends SQLiteOpenHelper {
 
 	public Topic update(String id, Topic newTopic) {
 		return null;
+	}
+
+	public static void main(String[] arg0) {
+
 	}
 }

@@ -1,5 +1,6 @@
 package vob.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import vob.annotation.HasMany;
@@ -15,15 +16,17 @@ public class Topic {
 	@HasMany(children = "Words")
 	private List<Word> wordList;
 	
+	
 	public Topic() {
-		
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	public Topic(int id, String name, String imageURL, List<Word> wordList) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.imageURL = imageURL;
-		this.wordList = wordList;
+		this.wordList = new ArrayList<Word>();
 	}
 	public int getId() {
 		return id;
