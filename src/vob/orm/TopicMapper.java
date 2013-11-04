@@ -27,6 +27,7 @@ public class TopicMapper extends SQLiteOpenHelper {
 	private static final String COLUMN_PHONETIC = " phonetic ";
 	private static final String COLUMN_AUDIO_URL = "audioURL";
 	private static final String COLUMN_PARENT = "topic_id";
+	private static final String COLUMN_LEARNED = "isLearned";
 
 	public TopicMapper(Context context) {
 		super(context, DB_NAME, null, DATABASE_VERSION);
@@ -43,7 +44,7 @@ public class TopicMapper extends SQLiteOpenHelper {
 				+ COLUMN_WORD + " TEXT PRIMARY KEY," + COLUMN_PHONETIC
 				+ " TEXT," + COLUMN_MEANING + " TEXT," + COLUMN_IMAGE_URL
 				+ " TEXT," + COLUMN_AUDIO_URL + " TEXT," + COLUMN_PARENT
-				+ " INTEGER" + ")";
+				+ " INTEGER" + COLUMN_LEARNED + " INTEGER" + ")";
 		db.execSQL(CREATE_WORDS_TABLE);
 		db.execSQL(CREATE_TOPICS_TABLE);
 
@@ -84,6 +85,7 @@ public class TopicMapper extends SQLiteOpenHelper {
 		values.put(COLUMN_IMAGE_URL, word.getImageURL());
 		values.put(COLUMN_AUDIO_URL, word.getAudioURL());
 		values.put(COLUMN_PARENT, word.getTopic().getId());
+		values.put(COLUMN_LEARNED, word.getIslearned());
 
 		// Inserting Row
 
@@ -114,6 +116,7 @@ public class TopicMapper extends SQLiteOpenHelper {
 				aword.setImageURL(cursor.getString(3));
 				aword.setAudioURL(cursor.getString(4));
 				aword.setTopicId(cursor.getInt(5));
+				aword.setIslearned(cursor.getInt(6));
 
 				wordsList.add(aword);
 			} while (cursor.moveToNext());
@@ -130,7 +133,6 @@ public class TopicMapper extends SQLiteOpenHelper {
 		String getAllWords = "SELECT * FROM " + TABLE_WORDS;
 		SQLiteDatabase db = this.getWritableDatabase();
 
-	
 		// fetch the result set into Topic List
 		cursor = db.rawQuery(getAllTopics, null);
 		if (cursor.moveToFirst()) {
@@ -146,21 +148,22 @@ public class TopicMapper extends SQLiteOpenHelper {
 		}
 
 		wordsList = getAllWord();
-		
-		for(Word aWord : wordsList){
-			String log = "Name " + aWord.getWord() + " Phonetic  " + aWord.getPhonetic()+ "ID : "+ aWord.getTopicId();
-			Log.d("Word info ", log );
+
+		for (Word aWord : wordsList) {
+			String log = "Name " + aWord.getWord() + " Phonetic  "
+					+ aWord.getPhonetic() + "ID : " + aWord.getTopicId();
+			Log.d("Word info ", log);
 		}
-		
-		for (Topic aTopic : topicsList){
+
+		for (Topic aTopic : topicsList) {
 			aTopic.setWordList(new ArrayList<Word>());
 		}
-		
+
 		// get the wordList of each topic sdfsdf
 		for (Topic aTopic : topicsList) {
 			for (Word aWord : wordsList) {
 				if (aTopic.getId() == aWord.getTopicId()) {
-					aTopic.getWordList().add( new Word());
+					aTopic.getWordList().add(new Word());
 				}
 			}
 		}

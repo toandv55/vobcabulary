@@ -11,6 +11,7 @@ public class Word {
 	private String imageURL;
 	private String audioURL;
 	private int topicId;
+	private int islearned;
 
 	@BelongsTo(parent = "Topics")
 	private Topic topic;
@@ -30,6 +31,7 @@ public class Word {
 		this.imageURL = imageURL;
 		this.audioURL = audioURL;
 		this.topic = topic;
+		this.islearned = 0 ;
 	}
 
 	// Getter and Setter block
@@ -89,4 +91,12 @@ public class Word {
 		this.phonetic = phonetic;
 	}
 
+	public int getIslearned() {
+		return islearned;
+	}
+
+	public void setIslearned(int islearned) {
+		this.islearned = islearned;
+	}
+	
 }
