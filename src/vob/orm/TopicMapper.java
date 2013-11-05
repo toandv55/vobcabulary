@@ -182,6 +182,17 @@ public class TopicMapper extends SQLiteOpenHelper {
 
 		return aWord;
 	}
+	public Word deleteWord(Word aWord){
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.delete(TABLE_WORDS, COLUMN_WORD + " = ?", new String[] { String.valueOf(aWord.getWord()) });
+		return aWord;
+	}
+	
+	public Topic deleteTopic(Topic aTopic){
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.delete(TABLE_TOPICS, COLUMN_TOPIC_ID + " = ?", new String[] { String.valueOf(aTopic.getId()) });
+		return aTopic;
+	}
 
 	public Topic destroy(String id) {
 		return null;
