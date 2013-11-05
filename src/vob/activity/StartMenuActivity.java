@@ -20,7 +20,7 @@ public class StartMenuActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start_menu);
-		// Create the database 
+		// Create the database
 		dbInit();
 
 	}
@@ -38,8 +38,6 @@ public class StartMenuActivity extends Activity {
 	 * @param v
 	 */
 	/*
-	 * public void dbTest(View v){ Intent intent = new Intent (this,
-	 * DBTest.class); startActivity(intent); }
 	 */public void play(View v) {
 		Intent intent = new Intent(this, StudyMenuActivity.class);
 		startActivity(intent);
@@ -66,16 +64,15 @@ public class StartMenuActivity extends Activity {
 
 		// Insert topic Succesfull
 		Topic animal = new Topic(1, "Animal", "animal", null);
-		Topic clothe = new Topic(2, "Clothes", "clothes", null);
+		Topic clothes = new Topic(2, "Clothes", "clothes", null);
 		Topic human = new Topic(3, "Human", "human", null);
 
 		Log.d("Insert ", "Initiate inserting new topics  ");
-		
-		 topicMaper.add(animal);
-		 topicMaper.add(clothe);
-		 topicMaper.add(human);
-		 
-		 
+
+		topicMaper.add(animal);
+		topicMaper.add(clothes);
+		topicMaper.add(human);
+
 		Log.d("Insert ", "Inserting success");
 
 		// Create List Animal object to be inserted.
@@ -108,8 +105,20 @@ public class StartMenuActivity extends Activity {
 				animal);
 		Word spider = new Word("spider", "spaɪ.dər", "con nhện", "spider",
 				"spider", animal);
-		Word tiger = new Word("tiger", "taɪ.gər", "con hổ", "tiger", "tiger",
-				animal);
+		Word tiger = new Word("tiger", "taɪ.gər", "con hổ", "tiger", "tiger", animal);
+		
+		//CreateList 
+		Word bag = new Word("bag", "bæg", "túi xách", "bag", "bag", clothes);
+		Word dress = new Word("dress", "dres", "váy", "dress", "dress", clothes);
+		Word glasses = new Word("glasses", "glɑs", "con hổ", "glasses", "glasses", clothes);
+		Word hat = new Word("hat", "hæt", "mũ", "hat", "hat", clothes);
+		Word jacket = new Word("jacket", "dʒæk.ɪt", "áo khoác", "jacket", "jacket", clothes);
+		Word jeans = new Word("jeans", "dʒinz", "quần jean", "jeans", "jeans", clothes);
+		Word shoe = new Word("shoe", "taɪ.gər", "giày", "shoe", "shoe", clothes);
+		Word sock = new Word("sock", "sɒk", "tất", "sock", "sock", clothes);
+		Word trousers = new Word("trousers", "traʊ.zəz", "quần dài", "trousers", "trousers", clothes);
+		Word watch = new Word("watch", "wɒtʃ", "đồng hồ", "watch", "watch", clothes);
+		Word shirt = new Word("shirt", "ʃɜt", "áo sơ mi", "shirt", "shirt", clothes);
 
 		List<Word> addList = new ArrayList<Word>();
 		addList.add(bird);
@@ -155,8 +164,8 @@ public class StartMenuActivity extends Activity {
 			Log.d("Topic info ", log);
 		}
 
-		Log.d("delte a word", "Delete bird");
-		topicMaper.deleteWord(bird);
+	/*	Log.d("delte a word", "Delete bird");
+		topicMaper.deleteWord(bird);*/
 
 	}
 
