@@ -157,7 +157,7 @@ public class TopicMapper extends SQLiteOpenHelper {
 		for (Topic aTopic : topicsList) {
 			for (Word aWord : wordsList) {
 				if (aTopic.getId() == aWord.getTopicId()) {
-					aTopic.getWordList().add(new Word());
+					aTopic.getWordList().add(aWord);
 				}
 			}
 		}
@@ -166,19 +166,11 @@ public class TopicMapper extends SQLiteOpenHelper {
 	}
 
 	public Word updateLearned(Word aWord, int value) {
-		aWord.setIslearned(value);
+		aWord.setIslearned(1);
 		SQLiteDatabase db = this.getWritableDatabase();
-		ContentValues values = new ContentValues();
-
-		values.put(COLUMN_PHONETIC, aWord.getPhonetic());
-		values.put(COLUMN_MEANING, aWord.getMeaning());
-		values.put(COLUMN_IMAGE_URL, aWord.getImageURL());
-		values.put(COLUMN_AUDIO_URL, aWord.getAudioURL());
-		values.put(COLUMN_PARENT, aWord.getTopic().getId());
-		values.put(COLUMN_LEARNED, aWord.getIslearned());
-
-		db.update(TABLE_WORDS, values, COLUMN_WORD + " = ?",
-				new String[] { String.valueOf(aWord.getWord()) });
+		String sql = "update words set islearned=1 where word='"+aWord.getWord() + "'";
+		Log.d(sql, "toan");
+		db.execSQL(sql);
 
 		return aWord;
 	}

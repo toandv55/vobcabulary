@@ -21,8 +21,22 @@ public class StartMenuActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start_menu);
 		// Create the database
-		dbInit();
-
+		//dbInit();
+		Word a = null;
+		TopicMapper mapper = new TopicMapper(this);
+		Word w = new Word();
+		w.setWord("dog");
+		mapper.updateLearned(w, 1);
+		//List<Topic> list = mapper.getAllTopics();
+	//	for (Topic t : list) {
+			//for (Word w : t.getWordList()) {
+				//mapper.updateLearned(w, 1);
+			//	a = w;
+			//	Log.d(w.getWord(), "toan");
+			//}
+		//}
+		
+		//mapper.updateLearned(a, 1);
 	}
 
 	@Override
